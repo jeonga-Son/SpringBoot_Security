@@ -25,12 +25,12 @@ public class UserServiceImpl implements UserService{
         userDto.setUserId(UUID.randomUUID().toString());
 
         ModelMapper mapper = new ModelMapper();
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT); // 데이터 값을 넣는 것. 엄격한 기준으로 넣는다.
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        UserEntity userEntity = mapper.map(userDto, UserEntity.class); // 복사됨.
+        UserEntity userEntity = mapper.map(userDto, UserEntity.class);
         userEntity.setEncrypedPwd(passwordEncoder.encode(userDto.getPwd()));
 
-        userRepository.save(userEntity); // 최종적으로 userRepository에 저장
+        userRepository.save(userEntity);
 
         UserDto returnUserDto = mapper.map(userEntity, UserDto.class);
 
