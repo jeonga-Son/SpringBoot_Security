@@ -4,6 +4,8 @@ import com.example.userservice.dto.UserDto;
 import com.example.userservice.service.UserService;
 import com.example.userservice.vo.RequestLogin;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter { // 인증과 관련된 내용
     private UserService userService;
@@ -60,6 +63,17 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String userName = ((User)authResult.getPrincipal()).getUsername();
 
         UserDto userDetail = userService.getUserDetailByEmail(userName); // Server는 이 정보를 가지고 토큰을 만들어야 한다.
+
+        String token = Jwts.builder()
+                .setSubject(userDetail.getUserId())
+                .setExpiration(new Date(System.currentTimeMillis() + // 현재 날짜보다 + 1 => 토큰 유효기간
+                        Long.parseLong(env.getProperty("token.expiration_time")))) // yml 파일에 입력한 내용
+                .signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret")) // yml 파일에 입력한 내용
+                .compact(); // 토큰이 만들어진다.
+
+        // 클라이언트에게 토큰 및 유저 정보 보내기
+        response.addHeader("token", token);
+        response.addHeader("userId", userDetail.getUserId());
 
     }
 }
