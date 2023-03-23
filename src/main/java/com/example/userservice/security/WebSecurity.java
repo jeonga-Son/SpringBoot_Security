@@ -40,7 +40,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter { // Spring Securi
 
     private AuthenticationFilter getAuthenticationFilter() throws Exception { // 이 메소드를 통해 AuthenticationFilter를 리턴해준다.
         AuthenticationFilter authenticationFilter
-                = new AuthenticationFilter(authenticationManager());
+                = new AuthenticationFilter(authenticationManager(), userService, env);
 
         return authenticationFilter;
     }

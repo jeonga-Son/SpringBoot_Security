@@ -1,11 +1,15 @@
 package com.example.userservice.security;
 
+import com.example.userservice.dto.UserDto;
+import com.example.userservice.service.UserService;
 import com.example.userservice.vo.RequestLogin;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -16,8 +20,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter { // 인증과 관련된 내용
+    private UserService userService;
+    private Environment env;
 
-    public AuthenticationFilter(AuthenticationManager authenticationManager) {
+    public AuthenticationFilter(AuthenticationManager authenticationManager, UserService userService, Environment env) {
+        this.userService = userService;
+        this.env = env;
         super.setAuthenticationManager(authenticationManager);
     }
 
@@ -44,7 +52,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        super.successfulAuthentication(request, response, chain, authResult);
+    // 인증을 성공하고 난 후 호출되는 메소드
+    protected void successfulAuthentication(HttpServletRequest request,
+                                            HttpServletResponse response,
+                                            FilterChain chain,
+                                            Authentication authResult) throws IOException, ServletException {
+        String userName = ((User)authResult.getPrincipal()).getUsername();
+
+        UserDto userDetail = userService.getUserDetailByEmail(userName); // Server는 이 정보를 가지고 토큰을 만들어야 한다.
+
     }
 }

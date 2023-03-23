@@ -20,7 +20,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("")
+    /**
+     * 유저 생성 API
+     * [POST] /users
+     * @return ResponseEntity<ResponseUser>
+     * */
+    @PostMapping("") // (POST) localhost:8081/users
     public ResponseEntity<ResponseUser> createUser(@RequestBody RequestUser user){
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
