@@ -14,11 +14,15 @@ public class UserEntity {
     @GeneratedValue(strategy = IDENTITY) // 값을 자동으로 증가시킨다.
     private Long id;
 
+    @Column(nullable = false, unique = true) // null 값 허용x, 유니크한 값 => 제약조건 설정
     private String userId;
 
+    @Column(nullable = false, unique = true, length = 50)
     private String email;
 
+    @Column(nullable = false, length = 50)
     private String name;
 
-    private String password;
+    @Column(nullable = false, unique = true)
+    private String encrypedPwd;
 }
