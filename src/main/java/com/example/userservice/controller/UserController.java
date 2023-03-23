@@ -23,7 +23,7 @@ public class UserController {
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        UserDto userDto = mapper.map(user, UserDto.class);
+        UserDto userDto = mapper.map(user, UserDto.class); // UserDto로 데이터값이 복사되고, 변환된다.
         userService.createUser(userDto);
 
         ResponseUser responseUser = mapper.map(userDto, ResponseUser.class);
