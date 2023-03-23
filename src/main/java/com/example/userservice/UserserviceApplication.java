@@ -13,7 +13,7 @@ public class UserserviceApplication {
 	}
 
 	@Bean
-	public BCryptPasswordEncoder passwordEncoder() {
+	public BCryptPasswordEncoder passwordEncoder(){
 		return new BCryptPasswordEncoder();
 	}
 }
