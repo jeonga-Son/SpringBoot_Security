@@ -28,9 +28,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter { // Spring Securi
         http.csrf().disable();
         http.authorizeRequests().antMatchers("/users").permitAll(); // "/users"로 들어오는 것 들은 모두 허용.
         http.authorizeRequests().antMatchers("/h2-console/**").permitAll(); // h2 db에 해당하는 내용 허용
+        http.authorizeRequests().antMatchers("/error/**").permitAll();
+        http.authorizeRequests().antMatchers("/login").permitAll();
 
         http.authorizeRequests().antMatchers("/**") // 특정 아이피로 들어오는 모든 요청에 대해서는 모두 필터링 처리를 해준다.
-                        .hasIpAddress("localhost")
+                        .hasIpAddress("127.0.0.1") // localhost라고 하면 안됨. 포스트맨 실행 시에도 localhost 말고 127.0.0.1로 해야됨.
                                 .and()
                                         .addFilter(getAuthenticationFilter());
 
