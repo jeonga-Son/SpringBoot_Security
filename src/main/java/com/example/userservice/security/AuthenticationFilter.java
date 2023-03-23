@@ -28,10 +28,10 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                                 HttpServletResponse response) throws AuthenticationException {
         try{
             RequestLogin creds = new ObjectMapper().readValue(request.getInputStream(),
-                    RequestLogin.class); // 요청된 데이터값을 입출력 스트림을 통해서 RequestLogin으로 변환해준다.
+                    RequestLogin.class); // 요청된 데이터값(email, password 등..)을 입출력 스트림을 통해서 RequestLogin으로 변환해준다.
 
             return getAuthenticationManager().authenticate( // authenticate 메소드가 Authentication 객체로 리턴해준다.
-                    new UsernamePasswordAuthenticationToken(
+                    new UsernamePasswordAuthenticationToken( // 토큰형태로 만들어서 Authentication객체로 리턴
                             creds.getEmail(),
                             creds.getPassword(),
                             new ArrayList<>()

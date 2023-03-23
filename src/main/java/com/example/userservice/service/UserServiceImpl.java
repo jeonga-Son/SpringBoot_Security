@@ -5,7 +5,6 @@ import com.example.userservice.jpa.UserEntity;
 import com.example.userservice.jpa.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,13 +24,14 @@ public class UserServiceImpl implements UserService{
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException { // 인증 처리
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException { // '인증' 처리
         UserEntity userEntity = userRepository.findByEmail(username); // 여기서 username은 email이다. 보통 username으로 쓴다.
 
         if (userEntity == null) {
             throw new UsernameNotFoundException(username + " : not found");
         }
 
+        // 파라미터 값과 DB에 있는 데이터 값을 알아서 비교해준다.
         return new User(userEntity.getEmail(), userEntity.getEncrypedPwd(), // db에 있는 encrypedPwd 값을 넘긴다.
                 true, true, true, true, new ArrayList<>()); // true가 무조건 4개가 들어간다.
     }
